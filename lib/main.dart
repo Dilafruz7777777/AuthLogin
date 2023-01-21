@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -11,13 +11,11 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -36,6 +34,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String? avatar;
+  String? name;
+  String? email;
 
   void _incrementCounter() {
     setState(() {
@@ -51,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
@@ -61,27 +61,40 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            ElevatedButton(onPressed: () async {
-             try{
-               GoogleSignIn _googleSingIn=GoogleSignIn(
-                 // scopes: [
-                 //   'email',
-                 //   'https://www.googleapis.com/auth/contacts.readonly',
-                 // ]
-               );
-               var data=await _googleSingIn.signIn();
-               print(data?.id);
-               print(data?.email);
-               print(data?.photoUrl);
-               print(data?.displayName);
-               _googleSingIn.signOut();
-             }catch(e){
-               print(e);
-             }
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  GoogleSignIn _googleSignIn = GoogleSignIn();
+                  var data = await _googleSignIn.signIn();
+                  print(data?.id);
+                  print(data?.email);
+                  print(data?.photoUrl);
+                  print(data?.displayName);
+                  avatar = data?.photoUrl;
+                  name = data?.displayName;
+                  email = data?.email;
+                  setState(() {});
+                  _googleSignIn.signOut();
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: const Text("Google sign"),
+            ),
+            SizedBox(height: 10,),
+            avatar == null ? SizedBox.shrink() : Image.network(avatar ?? ""),
+            SizedBox(height: 10,),
+            name == null ? SizedBox.shrink() : Text(name ?? ""),
+            SizedBox(height: 10,),
 
-            }, child: const Text('Google sign'))
+            email == null ? SizedBox.shrink() : Text(email ?? ""),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }
