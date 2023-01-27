@@ -1,3 +1,5 @@
+import 'package:authlogin/Firebase_%20Uy_Ishi_24.01.2023/get_product_Uy_ishi.dart';
+import 'package:authlogin/Firebase_sinf_ishi/get_product.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AddNumber(),
+      home: getProduct_Uy_ishi(),
     );
   }
 }
